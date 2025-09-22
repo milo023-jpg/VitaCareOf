@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "968162001724",
+    "project_id": "vitacareof",
+    "storage_bucket": "vitacareof.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968162001724:android:ff6b307f6670c48fc51439",
+        "android_client_info": {
+          "package_name": "com.example.vitacareof"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2CHAvE0jZw5YhDYreIqi99ExZOzcPTzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
