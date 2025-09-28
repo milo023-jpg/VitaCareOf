@@ -77,4 +77,5 @@ class DefaultFirebaseOptions {
     authDomain: 'vitacareof.firebaseapp.com',
     storageBucket: 'vitacareof.firebasestorage.app',
   );
+
 }
