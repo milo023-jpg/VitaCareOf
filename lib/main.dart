@@ -6,7 +6,6 @@ import 'package:vitacareof/config/routes/go_router.dart';
 import 'package:vitacareof/data/datasources/firebase_auth_datasource.dart';
 import 'package:vitacareof/firebase_options.dart';
 import 'package:vitacareof/presentation/providers/auth_provider.dart';
-import 'package:vitacareof/presentation/screens/login/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
