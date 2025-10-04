@@ -22,6 +22,28 @@ class FirebaseAuthDatasource {
     );
   }
 
+  Future<UserEntity?> register(String email, String password, String? displayName) async {
+    final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final user = credential.user;
+    if (user == null) return null;
+
+    // Actualizar el displayName si se proporciona
+    if (displayName != null && displayName.isNotEmpty) {
+      await user.updateDisplayName(displayName);
+      await user.reload();
+    }
+
+    return UserEntity(
+      uid: user.uid,
+      email: user.email ?? '',
+      displayName: displayName ?? user.displayName,
+    );
+  }
+
   Future<void> logout() async {
     await _firebaseAuth.signOut();
   }
