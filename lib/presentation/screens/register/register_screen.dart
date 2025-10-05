@@ -41,23 +41,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: "Nombre"),
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: "Email"),
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
                 decoration: const InputDecoration(labelText: "Contraseña"),
                 obscureText: true,
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _confirmPasswordController,
                 decoration: const InputDecoration(labelText: "Confirmar Contraseña"),
                 obscureText: true,
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(

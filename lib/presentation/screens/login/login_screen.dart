@@ -34,12 +34,18 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: "Email"),
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
                 decoration: const InputDecoration(labelText: "Password"),
                 obscureText: true,
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
               ),
               const SizedBox(height: 10),
               Align(
@@ -69,7 +75,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: const Text("Login"),
               ),
-              const SizedBox(height: 20), // Espacio final para evitar choque con teclado
+              const SizedBox(
+                height: 20,
+              ), // Espacio final para evitar choque con teclado
             ],
           ),
         ),
