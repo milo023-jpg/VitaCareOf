@@ -22,13 +22,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text("Login")),
         resizeToAvoidBottomInset: true, // ✅ permite que se ajuste al teclado
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 30),
+              Image.asset('assets/images/LogoVitaCare.png', height: 150),
               const SizedBox(height: 20),
               TextField(
                 controller: _emailController,
@@ -68,7 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: const Text("Login"),
               ),
-
               const SizedBox(height: 20), // Espacio final para evitar choque con teclado
             ],
           ),

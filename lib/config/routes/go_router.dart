@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:vitacareof/presentation/screens/home/home_screen.dart';
 import 'package:vitacareof/presentation/screens/login/login_screen.dart';
 import 'package:vitacareof/presentation/screens/register/register_screen.dart';
-// Importa tus screens
-// import 'package:vitacareof/presentation/screens/login_screen.dart';
-// import 'package:vitacareof/presentation/screens/register_screen.dart';
-// import 'package:vitacareof/presentation/screens/home_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',
@@ -27,6 +23,7 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const HomeScreen(),
     ),
   ],
+
   // Manejo de errores
   errorBuilder: (context, state) => Scaffold(
     body: Center(
