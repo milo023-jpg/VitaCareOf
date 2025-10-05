@@ -15,11 +15,9 @@ class SideMenu extends StatelessWidget {
           padding: EdgeInsetsGeometry.symmetric(horizontal: 10, vertical: 20),
           child: CircleAvatar(radius: 35, child: Icon(Icons.edit)),
         ),
-        ListTile(
-          // TODO: implemetar ruta.
-          onTap: () {},
-          title: Center(child: Text('${user?.displayName}')),
-          subtitle: Center(child: Text('${user?.email}')),
+        NavigationDrawerDestination(
+          icon: Icon(Icons.person),
+          label: Text('${user?.email}'),
         ),
       ],
     );

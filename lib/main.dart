@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vitacareof/config/routes/go_router.dart';
+import 'package:vitacareof/config/theme/app_theme.dart';
 import 'package:vitacareof/data/datasources/firebase_auth_datasource.dart';
 import 'package:vitacareof/firebase_options.dart';
 import 'package:vitacareof/presentation/providers/auth_provider.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
+      theme: AppTheme(selectedColor: 0).getTheme(),
       routerConfig: appRouter,
     );
   }
