@@ -11,13 +11,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^4.1.1
-  firebase_auth: ^6.1.0
   provider: ^6.1.5+1
   go_router: ^16.2.4
-
   cupertino_icons: ^1.0.8
+
+  # FIREBASE
+  firebase_core: ^4.1.1
+  firebase_auth: ^6.1.0
   firebase_ui_auth: ^3.0.0
+  cloud_firestore: ^6.0.2
 
 dev_dependencies:
   flutter_test:
