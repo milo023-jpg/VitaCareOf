@@ -55,6 +55,11 @@ class SideMenu extends StatelessWidget {
 
         // ---------- OPCIONES DE NAVEGACIÓN ----------
         NavigationDrawerDestination(
+          icon: const Icon(Icons.home_outlined),
+          label: const Text('Inicio'),
+          selectedIcon: const Icon(Icons.home),
+        ),
+        NavigationDrawerDestination(
           icon: const Icon(Icons.person_outline),
           label: const Text('Perfil'),
           selectedIcon: const Icon(Icons.person),
@@ -85,15 +90,18 @@ class SideMenu extends StatelessWidget {
       onDestinationSelected: (index) {
         switch (index) {
           case 0:
-            context.go('/profile');
+            context.go('/home');
             break;
           case 1:
-            context.go('/theme');
+            context.go('/profile');
             break;
           case 2:
-            context.go('/datos');
+            context.go('/theme');
             break;
           case 3:
+            context.go('/datos');
+            break;
+          case 4:
             authProvider.logout();
             context.go('/login');
             break;

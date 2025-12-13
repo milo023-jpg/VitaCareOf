@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:vitacareof/presentation/screens/appointments/appointments_screen.dart';
 
 //    Screens
 import 'package:vitacareof/presentation/screens/home/home_screen.dart';
@@ -14,6 +15,9 @@ import 'package:vitacareof/presentation/screens/theme/theme_screen.dart';
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home',
   routes: [
+
+
+    //    LOGIN
     GoRoute(
       path: '/login',
       name: 'login',
@@ -24,11 +28,21 @@ final GoRouter appRouter = GoRouter(
       name: 'register',
       builder: (context, state) => const RegisterScreen(),
     ),
+
+    //    BOTTOM NAVIGATION BAR
     GoRoute(
       path: '/home',
       name: 'home',
       builder: (context, state) => const HomeScreen(),
     ),
+    GoRoute(
+      path: '/appointments',
+      name: 'appointments',
+      builder: (context, state) => const AppointmentsScreen(),
+    ),
+
+
+    //    SIDE MENU
     GoRoute(
       path: '/profile',
       name: 'profile',
