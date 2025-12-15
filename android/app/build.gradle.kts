@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.vitacareof"
-        minSdk = 23                  // 🔥 Forzamos minSdk en 23
+        minSdk = flutter.minSdkVersion                  // 🔥 Forzamos minSdk en 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

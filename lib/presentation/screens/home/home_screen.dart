@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitacareof/presentation/screens/home/advice_page.dart';
 import 'package:vitacareof/presentation/screens/home/appointments_page.dart';
 import 'package:vitacareof/presentation/screens/home/calendar_page.dart';
@@ -19,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AppointmentsPage(),
     CalendarPage(),
     MedicinePage(),
-    AdvicePage()
+    AdvicePage(),
   ];
 
   @override
@@ -37,10 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: "Citas",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: "Citas"),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
             label: "Calendario",
@@ -52,6 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.lightbulb),
             label: "Consejos",
+          ),
+        ],
+      ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.assignment_add),
+            label: 'Nueva cita',
+            onTap: () {
+              context.push('/appointments');
+            },
           ),
         ],
       ),
