@@ -5,6 +5,7 @@ import 'package:vitacareof/presentation/screens/home/advice_page.dart';
 import 'package:vitacareof/presentation/screens/home/appointments_page.dart';
 import 'package:vitacareof/presentation/screens/home/calendar_page.dart';
 import 'package:vitacareof/presentation/screens/home/medicine_page.dart';
+import 'package:vitacareof/presentation/widgets/horizontal_filters.dart';
 import 'package:vitacareof/presentation/widgets/side_menu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<String> filtros = ['Camilo', 'Juan Diego', 'Mar'];
+  String? filtroSeleccionado;
   int _paginaActual = 0;
 
   final List<Widget> _paginas = const [
@@ -29,7 +32,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: const SideMenu(),
       appBar: AppBar(title: const Text("VitaCare")),
-      body: _paginas[_paginaActual],
+      body: Column(
+        children: [
+          HorizontalFilters(
+            patients: filtros,
+            selectedPatient: filtroSeleccionado,
+            onSelected: (value) {
+              setState(() {
+                filtroSeleccionado = value;
+              });
+            },
+            onAddPatient: () {},
+          ),
+          Expanded(child: _paginas[_paginaActual]),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _paginaActual,
