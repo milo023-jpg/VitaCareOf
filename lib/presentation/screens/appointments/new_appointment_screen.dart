@@ -1,10 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vitacareof/data/datasources/patients_datasource.dart';
+import 'package:vitacareof/domain/entities/patient.dart';
 
-class NewAppointmentScreen extends StatelessWidget {
+class NewAppointmentScreen extends StatefulWidget {
   static const name = 'new-appointment';
 
   const NewAppointmentScreen({super.key});
+
+  @override
+  State<NewAppointmentScreen> createState() => _NewAppointmentScreenState();
+}
+
+class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
+  String? selectedPatientId;
+  String? selectedPatientName;
+  List<Patient> _patients = [];
+  final _patientsDatasource = PatientsDatasource();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _patientsDatasource.getPatients().listen((patients) {
+      setState(() {
+        _patients = patients;
+      });
+    });
+  }
+
+  void _selectPatient() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        if (_patients.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(24),
+            child: Center(child: Text('No hay pacientes creados')),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: _patients.length,
+          itemBuilder: (context, index) {
+            final patient = _patients[index];
+
+            return ListTile(
+              title: Text(patient.name),
+              onTap: () {
+                setState(() {
+                  selectedPatientId = patient.id;
+                  selectedPatientName = patient.name;
+                });
+                Navigator.pop(context);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +94,8 @@ class NewAppointmentScreen extends StatelessWidget {
 
             _selector(
               label: 'Paciente',
-              buttonText: 'Seleccionar',
-              onTap: () {},
+              buttonText: selectedPatientName ?? 'Seleccionar',
+              onTap: _selectPatient,
             ),
 
             const SizedBox(height: 12),
