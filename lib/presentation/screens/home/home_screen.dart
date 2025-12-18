@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vitacareof/data/datasources/patients_datasource.dart';
+import 'package:vitacareof/domain/entities/patient.dart';
 import 'package:vitacareof/presentation/screens/home/advice_page.dart';
 import 'package:vitacareof/presentation/screens/home/appointments_page.dart';
 import 'package:vitacareof/presentation/screens/home/calendar_page.dart';
@@ -16,7 +18,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> filtros = ['Camilo', 'Juan Diego', 'Mar'];
+  final _patientsDatasource = PatientsDatasource();
+  List<Patient> _patients = [];
   String? filtroSeleccionado;
   int _paginaActual = 0;
 
@@ -28,6 +31,50 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    _patientsDatasource.getPatients().listen((patients) {
+      setState(() {
+        _patients = patients;
+      });
+    });
+  }
+
+  void _mostrarDialogoNuevoPaciente() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        String nombre = '';
+
+        return AlertDialog(
+          title: const Text('Nuevo paciente'),
+          content: TextField(
+            autofocus: true,
+            decoration: const InputDecoration(hintText: 'Nombre del paciente'),
+            onChanged: (value) => nombre = value,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (nombre.trim().isNotEmpty) {
+                  await _patientsDatasource.addPatient(nombre.trim());
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Guardar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const SideMenu(),
@@ -35,14 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           HorizontalFilters(
-            patients: filtros,
+            patients: _patients,
             selectedPatient: filtroSeleccionado,
             onSelected: (value) {
               setState(() {
                 filtroSeleccionado = value;
               });
             },
-            onAddPatient: () {},
+            onAddPatient: _mostrarDialogoNuevoPaciente,
           ),
           Expanded(child: _paginas[_paginaActual]),
         ],

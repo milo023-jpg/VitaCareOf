@@ -13,7 +13,7 @@ import 'package:vitacareof/presentation/screens/register/register_screen.dart';
 import 'package:vitacareof/presentation/screens/theme/theme_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/login',
   routes: [
     //    LOGIN
     GoRoute(

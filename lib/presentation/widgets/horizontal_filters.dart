@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vitacareof/domain/entities/patient.dart';
 
 class HorizontalFilters extends StatelessWidget {
-  final List<String> patients;
+  final List<Patient> patients;
   final String? selectedPatient;
   final ValueChanged<String?> onSelected;
   final VoidCallback onAddPatient;
@@ -16,36 +17,34 @@ class HorizontalFilters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
-          /// 👉 Filtro "Todos"
+          /// 👉 Todos
           ChoiceChip(
             label: const Text('Todos'),
+            selected: selectedPatient == null,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            selected: selectedPatient == null,
             onSelected: (_) => onSelected(null),
           ),
 
           const SizedBox(width: 8),
 
-          /// 👉 Chips de pacientes
+          /// 👉 Pacientes
           ...patients.map((patient) {
             return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: ChoiceChip(
-                label: Text(patient),
+                label: Text(patient.name),
+                selected: selectedPatient == patient.id,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.circular(20),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                selected: selectedPatient == patient,
-                onSelected: (_) => onSelected(patient),
+                onSelected: (_) => onSelected(patient.id),
               ),
             );
           }),
@@ -57,7 +56,7 @@ class HorizontalFilters extends StatelessWidget {
             onTap: onAddPatient,
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              padding: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade400),
                 borderRadius: BorderRadius.circular(20),
