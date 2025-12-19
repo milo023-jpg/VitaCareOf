@@ -15,6 +15,8 @@ class NewAppointmentScreen extends StatefulWidget {
 class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   String? selectedPatientId;
   String? selectedPatientName;
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
   List<Patient> _patients = [];
   final _patientsDatasource = PatientsDatasource();
 
@@ -61,6 +63,34 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     );
   }
 
+  Future<void> _selectDate() async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
+  }
+
+  Future<void> _selectTime() async {
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: selectedTime ?? TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        selectedTime = pickedTime;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,9 +130,21 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
 
             const SizedBox(height: 12),
 
-            _selector(label: 'Fecha', buttonText: 'Seleccionar', onTap: () {}),
+            _selector(
+              label: 'Fecha',
+              buttonText: selectedDate == null
+                  ? 'Seleccionar'
+                  : '${selectedDate!.day} / ${selectedDate!.month} / ${selectedDate!.year}',
+              onTap: () => _selectDate(),
+            ),
 
-            _selector(label: 'Hora', buttonText: '00:00 a.m.', onTap: () {}),
+            _selector(
+              label: 'Hora',
+              buttonText: selectedTime == null
+                  ? 'seleccionar'
+                  : selectedTime!.format(context),
+              onTap: () => _selectTime(),
+            ),
 
             _selector(
               label: 'Recordatorio anterior',
