@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vitacareof/data/datasources/appointments_datasource.dart';
 import 'package:vitacareof/data/datasources/patients_datasource.dart';
+import 'package:vitacareof/domain/entities/appointment.dart';
 import 'package:vitacareof/domain/entities/patient.dart';
 
 class NewAppointmentScreen extends StatefulWidget {
@@ -93,6 +95,13 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appointmentsDatasource = AppointmentsDatasource();
+
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final doctorController = TextEditingController();
+    final locationController = TextEditingController();
+    final notesController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nueva cita'),
@@ -105,9 +114,35 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed: () {
-              // Aquí luego va Provider para guardar
-              context.pop(); // Finalizar
+            onPressed: () async {
+              if (selectedPatientId == null ||
+                  selectedDate == null ||
+                  selectedTime == null) {
+                return;
+              }
+
+              final appointment = Appointment(
+                id: '',
+                title: titleController.text,
+                description: descriptionController.text,
+                patientId: selectedPatientId!,
+                patientName: selectedPatientName!,
+                date: selectedDate!,
+                time: selectedTime!,
+                doctor: doctorController.text.isNotEmpty
+                    ? doctorController.text
+                    : null,
+                location: locationController.text.isNotEmpty
+                    ? locationController.text
+                    : null,
+                notes: notesController.text.isNotEmpty
+                    ? notesController.text
+                    : null,
+              );
+
+              await appointmentsDatasource.createAppointment(appointment);
+
+              context.pop();
             },
           ),
         ],
@@ -117,8 +152,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _input('Nombre de la cita'),
-            _input('Descripción'),
+            _input('Nombre de la cita', controller: titleController),
+            _input('Descripción', controller: descriptionController),
 
             const SizedBox(height: 12),
 
@@ -152,8 +187,11 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               onTap: () {},
             ),
 
-            _input('Nombre doctor (opcional)'),
-            _input('Lugar de la cita (opcional)'),
+            _input('Nombre doctor (opcional)', controller: doctorController),
+            _input(
+              'Lugar de la cita (opcional)',
+              controller: locationController,
+            ),
 
             _selector(
               label: 'Adjuntos',
@@ -162,17 +200,22 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               onTap: () {},
             ),
 
-            _input('Observaciones', maxLines: 3),
+            _input('Observaciones', maxLines: 3, controller: notesController),
           ],
         ),
       ),
     );
   }
 
-  Widget _input(String label, {int maxLines = 1}) {
+  Widget _input(
+    String label, {
+    int maxLines = 1,
+    TextEditingController? controller,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
+        controller: controller,
         maxLines: maxLines,
         decoration: InputDecoration(
           hintText: label,

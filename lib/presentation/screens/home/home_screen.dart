@@ -19,16 +19,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _patientsDatasource = PatientsDatasource();
+
   List<Patient> _patients = [];
   String? filtroSeleccionado;
   int _paginaActual = 0;
-
-  final List<Widget> _paginas = const [
-    AppointmentsPage(),
-    CalendarPage(),
-    MedicinePage(),
-    AdvicePage(),
-  ];
 
   @override
   void initState() {
@@ -39,6 +33,22 @@ class _HomeScreenState extends State<HomeScreen> {
         _patients = patients;
       });
     });
+  }
+
+  // 🔹 Selección dinámica de página (IMPORTANTE)
+  Widget _paginaActualWidget() {
+    switch (_paginaActual) {
+      case 0:
+        return AppointmentsPage(patientId: filtroSeleccionado);
+      case 1:
+        return const CalendarPage();
+      case 2:
+        return const MedicinePage();
+      case 3:
+        return const AdvicePage();
+      default:
+        return const SizedBox();
+    }
   }
 
   void _mostrarDialogoNuevoPaciente() {
@@ -78,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const SideMenu(),
-      appBar: AppBar(title: const Text("VitaCare")),
+      appBar: AppBar(title: const Text('VitaCare')),
       body: Column(
         children: [
           HorizontalFilters(
@@ -91,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             onAddPatient: _mostrarDialogoNuevoPaciente,
           ),
-          Expanded(child: _paginas[_paginaActual]),
+          Expanded(child: _paginaActualWidget()),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -103,18 +113,18 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: "Citas"),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Citas'),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
-            label: "Calendario",
+            label: 'Calendario',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.medication),
-            label: "Medicinas",
+            label: 'Medicinas',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.lightbulb),
-            label: "Consejos",
+            label: 'Consejos',
           ),
         ],
       ),
@@ -122,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
         animatedIcon: AnimatedIcons.menu_close,
         children: [
           SpeedDialChild(
-            child: Icon(Icons.assignment_add),
+            child: const Icon(Icons.assignment_add),
             label: 'Nueva cita',
             onTap: () {
               context.push('/appointments');
