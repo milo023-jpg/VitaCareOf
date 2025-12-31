@@ -9,6 +9,8 @@ import 'package:vitacareof/presentation/screens/home/calendar_page.dart';
 import 'package:vitacareof/presentation/screens/home/medicine_page.dart';
 import 'package:vitacareof/presentation/widgets/horizontal_filters.dart';
 import 'package:vitacareof/presentation/widgets/side_menu.dart';
+import 'package:vitacareof/presentation/screens/medicines/new_medicine_page.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -136,6 +138,18 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Nueva cita',
             onTap: () {
               context.push('/appointments');
+            },
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.medication_outlined),
+            label: 'Nuevo medicamento',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => NewMedicinePage(patients: _patients),
+                ),
+              );
             },
           ),
         ],
