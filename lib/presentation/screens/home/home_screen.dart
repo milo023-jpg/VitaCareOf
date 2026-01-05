@@ -93,16 +93,17 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(title: const Text('VitaCare')),
       body: Column(
         children: [
-          HorizontalFilters(
-            patients: _patients,
-            selectedPatient: filtroSeleccionado,
-            onSelected: (value) {
-              setState(() {
-                filtroSeleccionado = value;
-              });
-            },
-            onAddPatient: _mostrarDialogoNuevoPaciente,
-          ),
+          if (_paginaActual == 0 || _paginaActual == 1 || _paginaActual == 2)
+            HorizontalFilters(
+              patients: _patients,
+              selectedPatient: filtroSeleccionado,
+              onSelected: (value) {
+                setState(() {
+                  filtroSeleccionado = value;
+                });
+              },
+              onAddPatient: _mostrarDialogoNuevoPaciente,
+            ),
           Expanded(child: _paginaActualWidget()),
         ],
       ),

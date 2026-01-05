@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:vitacareof/domain/entities/appointment.dart';
+
 class AppointmentDetailPage extends StatelessWidget {
   final Appointment appointment;
   const AppointmentDetailPage({super.key, required this.appointment});
