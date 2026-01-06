@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:vitacareof/domain/entities/appointment.dart';
+import 'package:vitacareof/presentation/screens/appointments/appointment_detail_page.dart';
 import 'package:vitacareof/presentation/screens/appointments/new_appointment_screen.dart';
 
 //    Screens
@@ -67,6 +69,15 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final data = state.extra as Map<String, dynamic>?;
         return EditNameScreen(data: data);
+      },
+    ),
+
+    GoRoute(
+      path: '/appointment_detail',
+      name: AppointmentDetailPage.name,
+      builder: (context, state) {
+        final appointment = state.extra as Appointment;
+        return AppointmentDetailPage(appointment: appointment);
       },
     ),
   ],

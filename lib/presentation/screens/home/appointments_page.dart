@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitacareof/data/datasources/appointments_datasource.dart';
 import 'package:vitacareof/domain/entities/appointment.dart';
 
@@ -229,85 +230,91 @@ class _AppointmentTileState extends State<_AppointmentTile> {
   bool isDone = false;
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Boton de punto
-          IconButton(
-            onPressed: () {
-              setState(() {
-                isDone = !isDone;
-              });
-            },
-            icon: Icon(
-              isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+    return InkWell(
+      onTap: () {
+        context.push('/appointment_detail', extra: widget.appointment);
+      },
+      splashColor: Colors.blue,
+      highlightColor: Colors.blue,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
             ),
-          ),
-          const SizedBox(width: 10),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Boton de punto
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  isDone = !isDone;
+                });
+              },
+              icon: Icon(
+                isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+              ),
+            ),
+            const SizedBox(width: 10),
 
-          // iformacion de la cita
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.appointment.title.trim().isEmpty
-                      ? 'Sin título'
-                      : widget.appointment.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
+            // iformacion de la cita
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.appointment.title.trim().isEmpty
+                        ? 'Sin título'
+                        : widget.appointment.title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      widget.appointment.time.format(context),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '•',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        widget.appointment.patientName,
-                        overflow: TextOverflow.ellipsis,
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        widget.appointment.time.format(context),
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey.shade600,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 8),
+                      Text(
+                        '•',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          widget.appointment.patientName,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
