@@ -1,0 +1,142 @@
+[
+  {
+    "id": "sueno_01",
+    "title": "Mejora tus hábitos de sueño para rendir mejor cada día",
+    "subtitle": "Rutina nocturna práctica para dormir mejor y despertar con energía.",
+    "category": "Sueno",
+    "tags": ["rutina", "pantallas", "descanso"],
+    "image": "assets/images/tips/sueno_01.png",
+    "readMinutes": 4,
+    "markdown": "## ¿Por qué importa dormir bien?\nDormir adecuadamente impacta directamente tu concentración, memoria, estado de ánimo y sistema inmunológico. Dormir poco o mal de forma constante puede afectar tu productividad y tu salud a largo plazo.\n\n## Qué hacer hoy\n1. **Establece una hora fija** para dormir y despertar.\n2. Reduce el uso de pantallas al menos **45 minutos antes de acostarte**.\n3. Mantén el dormitorio oscuro, fresco y silencioso.\n\n## Rutina nocturna recomendada\n- Cena ligero.\n- Baja la intensidad de luces.\n- Realiza una actividad relajante (leer, respiración, música suave).\n\n## Errores comunes\n- Usar el celular en la cama.\n- Dormir siestas largas durante el día.\n- Consumir cafeína por la tarde.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "sueno_02",
+    "title": "Cómo crear una rutina de sueño constante",
+    "subtitle": "Pequeños hábitos que ayudan a dormir más rápido y profundo.",
+    "category": "Sueno",
+    "tags": ["horarios", "descanso", "habitos"],
+    "image": "assets/images/tips/sueno_02.png",
+    "readMinutes": 3,
+    "markdown": "## La clave del buen descanso\nEl cuerpo funciona mejor cuando sigue horarios regulares. Dormir y despertar a horas diferentes confunde al reloj biológico.\n\n## Pasos para empezar\n1. Define una hora fija para ir a la cama.\n2. Despiértate a la misma hora incluso fines de semana.\n3. Evita acostarte \"solo un poco más tarde\".\n\n## Tip práctico\nColoca una alarma nocturna que te recuerde empezar tu rutina de descanso.\n\n## Beneficios\n- Te duermes más rápido.\n- Mejor energía durante el día.\n- Menos despertares nocturnos.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "alim_01",
+    "title": "Cómo tener una alimentación balanceada sin complicarte",
+    "subtitle": "Guía simple para comer mejor todos los días.",
+    "category": "Alimentacion",
+    "tags": ["plato", "nutricion", "equilibrio"],
+    "image": "assets/images/tips/alim_01.png",
+    "readMinutes": 4,
+    "markdown": "## Alimentarse bien no es comer perfecto\nUna alimentación balanceada no requiere dietas estrictas, sino constancia y variedad.\n\n## Regla del plato\n- **½ verduras**\n- **¼ proteína**\n- **¼ carbohidratos**\n\n## Qué hacer hoy\n- Agrega una verdura extra a cada comida.\n- Prioriza agua sobre bebidas azucaradas.\n- Incluye proteína en el desayuno.\n\n## Errores comunes\n- Saltarse comidas.\n- Eliminar grupos completos de alimentos.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "alim_02",
+    "title": "Importancia de la hidratación diaria",
+    "subtitle": "Por qué tomar suficiente agua mejora tu salud y energía.",
+    "category": "Alimentacion",
+    "tags": ["agua", "hidratacion", "energia"],
+    "image": "assets/images/tips/alim_02.png",
+    "readMinutes": 3,
+    "markdown": "## El agua y tu cuerpo\nEl agua participa en casi todos los procesos del cuerpo: digestión, circulación y regulación de temperatura.\n\n## Señales de deshidratación\n- Fatiga\n- Dolor de cabeza\n- Boca seca\n\n## Tips prácticos\n- Lleva una botella contigo.\n- Toma un vaso de agua al despertar.\n- Acompaña cada comida con agua.\n\n## Recordatorio\nNo esperes a tener sed para hidratarte.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "ejer_01",
+    "title": "Ejercicio en la tercera edad: por qué sí importa",
+    "subtitle": "Beneficios reales y cómo empezar de forma segura.",
+    "category": "Ejercicio",
+    "tags": ["movilidad", "fuerza", "equilibrio"],
+    "image": "assets/images/tips/ejer_01.png",
+    "readMinutes": 4,
+    "markdown": "## Beneficios del ejercicio\n- Mejora equilibrio y fuerza.\n- Reduce riesgo de caídas.\n- Aumenta independencia.\n\n## Rutina sencilla\n1. Caminar 10 minutos.\n2. Ejercicios de piernas sentado.\n3. Estiramientos suaves.\n\n## Recomendaciones\n- Empieza lento.\n- Usa ropa cómoda.\n- Escucha a tu cuerpo.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "ejer_02",
+    "title": "Actividad física diaria aunque tengas poco tiempo",
+    "subtitle": "Cómo moverte más sin ir al gimnasio.",
+    "category": "Ejercicio",
+    "tags": ["actividad", "movimiento", "salud"],
+    "image": "assets/images/tips/ejer_02.png",
+    "readMinutes": 3,
+    "markdown": "## Moverse cuenta\nNo todo ejercicio debe ser intenso o largo. El movimiento diario suma.\n\n## Ideas simples\n- Caminar mientras hablas por teléfono.\n- Usar escaleras.\n- Estirarte cada hora.\n\n## Objetivo diario\nAcumular al menos **30 minutos de movimiento**.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "estres_01",
+    "title": "Cómo manejar el estrés en el día a día",
+    "subtitle": "Técnicas simples para reducir la tensión diaria.",
+    "category": "Estres",
+    "tags": ["estres", "ansiedad", "respiracion"],
+    "image": "assets/images/tips/estres_01.png",
+    "readMinutes": 4,
+    "markdown": "## El estrés acumulado afecta la salud\nPuede provocar cansancio, irritabilidad y problemas de sueño.\n\n## Técnicas rápidas\n1. Respiración profunda 4-4-6.\n2. Pausas conscientes.\n3. Reducir multitarea.\n\n## Qué evitar\n- Ignorar señales del cuerpo.\n- Sobrecargarte sin descanso.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "estres_02",
+    "title": "Importancia de los descansos durante el día",
+    "subtitle": "Pausar también es productividad.",
+    "category": "Estres",
+    "tags": ["pausas", "descanso", "productividad"],
+    "image": "assets/images/tips/estres_02.png",
+    "readMinutes": 3,
+    "markdown": "## Descansar mejora el rendimiento\nPausas cortas reducen el agotamiento mental.\n\n## Cómo hacerlo\n- 5 minutos cada hora.\n- Levántate y estírate.\n- Respira profundo.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "med_01",
+    "title": "Cómo no olvidar tus medicamentos",
+    "subtitle": "Estrategias prácticas para cumplir tu tratamiento.",
+    "category": "Medicacion",
+    "tags": ["medicamentos", "recordatorios", "rutina"],
+    "image": "assets/images/tips/med_01.png",
+    "readMinutes": 3,
+    "markdown": "## La constancia es clave\nTomar los medicamentos correctamente ayuda a que el tratamiento funcione.\n\n## Tips útiles\n- Asócialos a una rutina diaria.\n- Usa alarmas.\n- Organiza pastilleros.\n\n## Evita\n- Suspender sin indicación médica.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "med_02",
+    "title": "Errores comunes al tomar medicamentos",
+    "subtitle": "Pequeños descuidos que pueden afectar tu salud.",
+    "category": "Medicacion",
+    "tags": ["errores", "tratamiento", "salud"],
+    "image": "assets/images/tips/med_02.png",
+    "readMinutes": 4,
+    "markdown": "## Errores frecuentes\n- Cambiar horarios.\n- Mezclar con alcohol.\n- No leer indicaciones.\n\n## Recomendación\nAnte dudas, consulta siempre con un profesional.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "prev_01",
+    "title": "La importancia de los chequeos médicos regulares",
+    "subtitle": "Detectar a tiempo también es cuidarse.",
+    "category": "Prevencion",
+    "tags": ["chequeos", "prevencion", "salud"],
+    "image": "assets/images/tips/prev_01.png",
+    "readMinutes": 4,
+    "markdown": "## Prevención activa\nLos chequeos ayudan a detectar problemas antes de que aparezcan síntomas.\n\n## Qué hacer\n- Agenda controles anuales.\n- Lleva historial médico.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "prev_02",
+    "title": "Postura y ergonomía en la vida diaria",
+    "subtitle": "Cuida tu espalda con pequeños ajustes.",
+    "category": "Prevencion",
+    "tags": ["postura", "espalda", "ergonomia"],
+    "image": "assets/images/tips/prev_02.png",
+    "readMinutes": 3,
+    "markdown": "## Una mala postura pasa factura\nPuede causar dolores crónicos.\n\n## Tips rápidos\n- Ajusta altura de pantalla.\n- Apoya ambos pies.\n- Cambia de posición frecuentemente.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "prev_03",
+    "title": "Beneficios de mantener una rutina diaria",
+    "subtitle": "El orden también mejora la salud mental.",
+    "category": "Prevencion",
+    "tags": ["rutina", "organizacion", "habitos"],
+    "image": "assets/images/tips/prev_03.png",
+    "readMinutes": 3,
+    "markdown": "## Rutinas saludables\nAportan estabilidad, reducen estrés y mejoran adherencia a hábitos.\n\n## Empieza por\n- Horarios de sueño.\n- Comidas regulares.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  },
+  {
+    "id": "prev_04",
+    "title": "La importancia de caminar todos los días",
+    "subtitle": "Un hábito simple con grandes beneficios.",
+    "category": "Prevencion",
+    "tags": ["caminar", "cardio", "salud"],
+    "image": "assets/images/tips/prev_04.png",
+    "readMinutes": 3,
+    "markdown": "## Caminar es ejercicio\nMejora circulación, ánimo y salud cardiovascular.\n\n## Objetivo\n- 20–30 minutos diarios.\n\n> *Contenido educativo. No sustituye atención médica.*"
+  }
+]

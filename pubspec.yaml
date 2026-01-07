@@ -15,6 +15,8 @@ dependencies:
   go_router: ^16.2.4
   cupertino_icons: ^1.0.8
 
+  flutter_markdown: ^0.7.3
+
   # Animated FloatingActionButton 
   flutter_speed_dial: ^7.0.0
   # FIREBASE
@@ -38,6 +40,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/vitacarelogo.png
+    - assets/data/health_articles.json
+    - assets/images/tips/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
