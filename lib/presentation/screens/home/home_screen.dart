@@ -11,7 +11,6 @@ import 'package:vitacareof/presentation/widgets/horizontal_filters.dart';
 import 'package:vitacareof/presentation/widgets/side_menu.dart';
 import 'package:vitacareof/presentation/screens/medicines/new_medicine_page.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -132,7 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
+        icon: Icons.add,
+        activeIcon: Icons.close,
         children: [
           SpeedDialChild(
             child: const Icon(Icons.assignment_add),

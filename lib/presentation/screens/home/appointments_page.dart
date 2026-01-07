@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitacareof/data/datasources/appointments_datasource.dart';
 import 'package:vitacareof/domain/entities/appointment.dart';
 
@@ -59,7 +60,8 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 _DateSection(
                   title: 'Esta semana',
                   expanded: _weekExpanded,
-                  onToggle: () => setState(() => _weekExpanded = !_weekExpanded),
+                  onToggle: () =>
+                      setState(() => _weekExpanded = !_weekExpanded),
                   children: groups.week,
                 ),
               if (groups.month.isNotEmpty)
@@ -90,8 +92,9 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     final todayStart = DateTime(now.year, now.month, now.day);
     final tomorrowStart = todayStart.add(const Duration(days: 1));
 
-    final weekStart =
-        todayStart.subtract(Duration(days: todayStart.weekday - 1)); // lunes
+    final weekStart = todayStart.subtract(
+      Duration(days: todayStart.weekday - 1),
+    ); // lunes
     final nextWeekStart = weekStart.add(const Duration(days: 7));
 
     final monthStart = DateTime(now.year, now.month, 1);
@@ -99,7 +102,8 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
         ? DateTime(now.year + 1, 1, 1)
         : DateTime(now.year, now.month + 1, 1);
 
-    final sorted = [...list]..sort((a, b) => _asDateTime(a).compareTo(_asDateTime(b)));
+    final sorted = [...list]
+      ..sort((a, b) => _asDateTime(a).compareTo(_asDateTime(b)));
 
     final today = <Appointment>[];
     final week = <Appointment>[];
@@ -126,7 +130,12 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
       }
     }
 
-    return _AppointmentGroups(today: today, week: week, month: month, future: future);
+    return _AppointmentGroups(
+      today: today,
+      week: week,
+      month: month,
+      future: future,
+    );
   }
 
   DateTime _asDateTime(Appointment a) {
@@ -189,7 +198,9 @@ class _DateSection extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Icon(
-                  expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  expanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
                   size: 18,
                   color: Colors.black54,
                 ),
@@ -207,68 +218,103 @@ class _DateSection extends StatelessWidget {
   }
 }
 
-class _AppointmentTile extends StatelessWidget {
+class _AppointmentTile extends StatefulWidget {
   final Appointment appointment;
   const _AppointmentTile(this.appointment);
 
   @override
+  State<_AppointmentTile> createState() => _AppointmentTileState();
+}
+
+class _AppointmentTileState extends State<_AppointmentTile> {
+  bool isDone = false;
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 22,
-            height: 22,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade400, width: 2),
+    return InkWell(
+      onTap: () {
+        context.push('/appointment_detail', extra: widget.appointment);
+      },
+      splashColor: Colors.blue,
+      highlightColor: Colors.blue,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  appointment.title.trim().isEmpty ? 'Sin título' : appointment.title,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      appointment.time.format(context),
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Boton de punto
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  isDone = !isDone;
+                });
+              },
+              icon: Icon(
+                isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+              ),
+            ),
+            const SizedBox(width: 10),
+
+            // iformacion de la cita
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.appointment.title.trim().isEmpty
+                        ? 'Sin título'
+                        : widget.appointment.title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
                     ),
-                    const SizedBox(width: 8),
-                    Text('•', style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        appointment.patientName,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        widget.appointment.time.format(context),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 8),
+                      Text(
+                        '•',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          widget.appointment.patientName,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
