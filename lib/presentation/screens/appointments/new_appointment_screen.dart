@@ -15,6 +15,12 @@ class NewAppointmentScreen extends StatefulWidget {
 }
 
 class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final doctorController = TextEditingController();
+  final locationController = TextEditingController();
+  final notesController = TextEditingController();
+
   String? selectedPatientId;
   String? selectedPatientName;
   DateTime? selectedDate;
@@ -97,11 +103,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   Widget build(BuildContext context) {
     final appointmentsDatasource = AppointmentsDatasource();
 
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final doctorController = TextEditingController();
-    final locationController = TextEditingController();
-    final notesController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nueva cita'),
@@ -249,5 +250,15 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    doctorController.dispose();
+    locationController.dispose();
+    notesController.dispose();
+    super.dispose();
   }
 }
