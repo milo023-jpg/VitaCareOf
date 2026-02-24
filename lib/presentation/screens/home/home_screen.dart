@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const CalendarPage();
       case 2:
-        return const MedicinePage();
+        return MedicinePage(patientId: filtroSeleccionado);
       case 3:
         return const AdvicePage();
       default:

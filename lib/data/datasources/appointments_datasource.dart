@@ -32,22 +32,21 @@ class AppointmentsDatasource {
 
   // Editar cita
   Future<void> updateAppointment(String id, Map<String, dynamic> data) async {
-  await _firestore
-      .collection('users')
-      .doc(_uid)
-      .collection('appointments')
-      .doc(id)
-      .update(data);
-}
+    await _firestore
+        .collection('users')
+        .doc(_uid)
+        .collection('appointments')
+        .doc(id)
+        .update(data);
+  }
 
-// Eliminar cita
-Future<void> deleteAppointment(String id) async {
-  await _firestore
-      .collection('users')
-      .doc(_uid)
-      .collection('appointments')
-      .doc(id)
-      .delete();
-}
-
+  // Eliminar cita
+  Future<void> deleteAppointment(String id) async {
+    await _firestore
+        .collection('users')
+        .doc(_uid)
+        .collection('appointments')
+        .doc(id)
+        .delete();
+  }
 }
