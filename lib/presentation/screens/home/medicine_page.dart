@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitacareof/data/datasources/medicines_datasource.dart';
 import 'package:vitacareof/domain/entities/medicine.dart';
 
@@ -37,7 +38,8 @@ class MedicinePage extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            if (morning.isNotEmpty) _Section(title: 'Mañana', medicines: morning),
+            if (morning.isNotEmpty)
+              _Section(title: 'Mañana', medicines: morning),
             if (afternoon.isNotEmpty)
               _Section(title: 'Tarde', medicines: afternoon),
             if (night.isNotEmpty) _Section(title: 'Noche', medicines: night),
@@ -60,7 +62,6 @@ class MedicinePage extends StatelessWidget {
       _effectiveTime(m).hour >= 12 && _effectiveTime(m).hour < 18;
 
   static bool _isNight(Medicine m) => _effectiveTime(m).hour >= 18;
-
 }
 
 /// SECCIÓN (Mañana / Tarde / Noche)
@@ -112,58 +113,63 @@ class _MedicineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Hora
-          Text(
-            _displayTime(context, medicine),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 16),
-
-          // Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  medicine.name.isNotEmpty ? medicine.name : 'Sin título',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  medicine.patientName,
-                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-                ),
-              ],
+    return InkWell(
+      onTap: () {
+        context.push('/medicine_detail', extra: medicine);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
             ),
-          ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Hora
+            Text(
+              _displayTime(context, medicine),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 16),
 
-          // Switch funcional (activa/desactiva en Firestore)
-          Switch(
-            value: medicine.isActive,
-            onChanged: (value) {
-              datasource.toggleMedicine(medicine.id, value);
-            },
-          ),
-        ],
+            // Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    medicine.name.isNotEmpty ? medicine.name : 'Sin título',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    medicine.patientName,
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+            ),
+
+            // Switch funcional (activa/desactiva en Firestore)
+            Switch(
+              value: medicine.isActive,
+              onChanged: (value) {
+                datasource.toggleMedicine(medicine.id, value);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

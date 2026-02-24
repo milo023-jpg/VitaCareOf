@@ -47,10 +47,7 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
 
   Future<void> _pickTime({required bool forFixed}) async {
     final initial = forFixed ? _fixedTime : _startTime;
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: initial,
-    );
+    final picked = await showTimePicker(context: context, initialTime: initial);
     if (picked == null) return;
 
     setState(() {
@@ -104,7 +101,9 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
       final med = Medicine(
         id: '',
         name: name,
-        description: _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
+        description: _descCtrl.text.trim().isEmpty
+            ? null
+            : _descCtrl.text.trim(),
         type: _type,
         patientId: _selectedPatient!.id,
         patientName: _selectedPatient!.name,
@@ -117,13 +116,16 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
             ? MedicineRepeatType.daily
             : null,
         // interval
-        intervalHours:
-            _scheduleType == MedicineScheduleType.interval ? _intervalHours : null,
-        startTime:
-            _scheduleType == MedicineScheduleType.interval ? _startTime : null,
+        intervalHours: _scheduleType == MedicineScheduleType.interval
+            ? _intervalHours
+            : null,
+        startTime: _scheduleType == MedicineScheduleType.interval
+            ? _startTime
+            : null,
         // duración
-        durationDays:
-            _durationType == MedicineDurationType.days ? _durationDays : null,
+        durationDays: _durationType == MedicineDurationType.days
+            ? _durationDays
+            : null,
         endDate: _durationType == MedicineDurationType.until ? _endDate : null,
       );
 
@@ -177,9 +179,10 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Frecuencia',
-                    style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Frecuencia',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 10),
                 SegmentedButton<MedicineScheduleType>(
                   segments: const [
@@ -215,8 +218,12 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
                     label: 'Cada',
                     value: '$_intervalHours horas',
                     onTap: () async {
-                      final picked = await _pickIntervalDialog(context, _intervalHours);
-                      if (picked != null) setState(() => _intervalHours = picked);
+                      final picked = await _pickIntervalDialog(
+                        context,
+                        _intervalHours,
+                      );
+                      if (picked != null)
+                        setState(() => _intervalHours = picked);
                     },
                   ),
                   const Padding(
@@ -277,9 +284,13 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
                   value: _selectedPatient?.name ?? 'Seleccionar',
                   valueMuted: _selectedPatient == null,
                   onTap: () async {
-                    final picked =
-                        await _pickPatientDialog(context, widget.patients, _selectedPatient);
-                    if (picked != null) setState(() => _selectedPatient = picked);
+                    final picked = await _pickPatientDialog(
+                      context,
+                      widget.patients,
+                      _selectedPatient,
+                    );
+                    if (picked != null)
+                      setState(() => _selectedPatient = picked);
                   },
                 ),
               ],
@@ -293,9 +304,10 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Duración',
-                    style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Duración',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 10),
                 SegmentedButton<MedicineDurationType>(
                   segments: const [
@@ -323,14 +335,20 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
                     label: 'Días',
                     value: '$_durationDays',
                     onTap: () async {
-                      final picked = await _pickDaysDialog(context, _durationDays);
-                      if (picked != null) setState(() => _durationDays = picked);
+                      final picked = await _pickDaysDialog(
+                        context,
+                        _durationDays,
+                      );
+                      if (picked != null)
+                        setState(() => _durationDays = picked);
                     },
                   ),
                 if (_durationType == MedicineDurationType.until)
                   _RowPick(
                     label: 'Fecha final',
-                    value: _endDate == null ? 'Seleccionar' : _formatDate(_endDate!),
+                    value: _endDate == null
+                        ? 'Seleccionar'
+                        : _formatDate(_endDate!),
                     valueMuted: _endDate == null,
                     onTap: _pickEndDate,
                   ),
@@ -394,8 +412,10 @@ class _RowPick extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Text(label,
-                  style: const TextStyle(fontSize: 14, color: Colors.black54)),
+              child: Text(
+                label,
+                style: const TextStyle(fontSize: 14, color: Colors.black54),
+              ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -436,12 +456,14 @@ Future<int?> _pickIntervalDialog(BuildContext context, int current) async {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ...options.map((h) => RadioListTile<int>(
-                    value: h,
-                    groupValue: selected,
-                    title: Text('$h horas'),
-                    onChanged: (v) => setState(() => selected = v!),
-                  )),
+              ...options.map(
+                (h) => RadioListTile<int>(
+                  value: h,
+                  groupValue: selected,
+                  title: Text('$h horas'),
+                  onChanged: (v) => setState(() => selected = v!),
+                ),
+              ),
               const Divider(),
               Row(
                 children: [
@@ -460,7 +482,7 @@ Future<int?> _pickIntervalDialog(BuildContext context, int current) async {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           );
         },
