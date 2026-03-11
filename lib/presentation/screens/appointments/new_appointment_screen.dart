@@ -4,6 +4,7 @@ import 'package:vitacareof/data/datasources/appointments_datasource.dart';
 import 'package:vitacareof/data/datasources/patients_datasource.dart';
 import 'package:vitacareof/domain/entities/appointment.dart';
 import 'package:vitacareof/domain/entities/patient.dart';
+import 'package:vitacareof/services/notifications_service.dart';
 
 class NewAppointmentScreen extends StatefulWidget {
   static const name = 'new-appointment';
@@ -37,6 +38,17 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         _patients = patients;
       });
     });
+
+    // Prueba Notificacion
+    /* 
+    Future.delayed(const Duration(seconds: 3), () {
+      NotificationsService.showNotification(
+        id: 1,
+        title: 'Prueba',
+        body: 'Notificación funcionando',
+      );
+    }); 
+    */
   }
 
   void _selectPatient() {
@@ -142,7 +154,11 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               );
 
               await appointmentsDatasource.createAppointment(appointment);
-
+              await NotificationsService.showNotification(
+                id: appointment.hashCode,
+                title: 'Nueva cita',
+                body: 'Cita con ${appointment.patientName}',
+              );
               context.pop();
             },
           ),

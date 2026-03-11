@@ -7,10 +7,13 @@ import 'package:vitacareof/config/theme/app_theme.dart';
 import 'package:vitacareof/data/datasources/firebase_auth_datasource.dart';
 import 'package:vitacareof/firebase_options.dart';
 import 'package:vitacareof/presentation/providers/auth_provider.dart';
+import 'package:vitacareof/services/notifications_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await NotificationsService.init();
 
   runApp(
     MultiProvider(
