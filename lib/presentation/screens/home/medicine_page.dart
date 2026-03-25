@@ -22,7 +22,7 @@ class _MedicinePageState extends State<MedicinePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFF4F6F8),
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: StreamBuilder<List<Medicine>>(
         stream: datasource.getMedicines(),
         builder: (context, snapshot) {
@@ -123,10 +123,10 @@ class _Section extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black54,
+                    color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -135,7 +135,7 @@ class _Section extends StatelessWidget {
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
                   size: 18,
-                  color: Colors.black54,
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
                 ),
               ],
             ),
@@ -176,11 +176,11 @@ class _MedicineCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Theme.of(context).shadowColor.withOpacity(0.05),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
@@ -210,7 +210,7 @@ class _MedicineCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     medicine.patientName,
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 13, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
                   ),
                 ],
               ),

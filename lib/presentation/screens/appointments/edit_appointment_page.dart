@@ -4,17 +4,20 @@ import 'package:vitacareof/data/datasources/appointments_datasource.dart';
 import 'package:vitacareof/data/datasources/patients_datasource.dart';
 import 'package:vitacareof/domain/entities/appointment.dart';
 import 'package:vitacareof/domain/entities/patient.dart';
+import 'package:vitacareof/services/notification_service.dart';
 
-class NewAppointmentScreen extends StatefulWidget {
-  static const name = 'new-appointment';
+class EditAppointmentPage extends StatefulWidget {
+  static const name = 'edit-appointment';
 
-  const NewAppointmentScreen({super.key});
+  final Appointment appointment;
+
+  const EditAppointmentPage({super.key, required this.appointment});
 
   @override
-  State<NewAppointmentScreen> createState() => _NewAppointmentScreenState();
+  State<EditAppointmentPage> createState() => _EditAppointmentPageState();
 }
 
-class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
+class _EditAppointmentPageState extends State<EditAppointmentPage> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final doctorController = TextEditingController();
@@ -27,7 +30,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   DateTime? customReminder;
-  
+
   List<Patient> _patients = [];
   final _patientsDatasource = PatientsDatasource();
 
@@ -35,73 +38,57 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   void initState() {
     super.initState();
 
+    // ✅ precargar campos con la cita existente
+    final a = widget.appointment;
+    titleController.text = a.title;
+    descriptionController.text = a.description;
+    doctorController.text = a.doctor ?? '';
+    locationController.text = a.location ?? '';
+    notesController.text = a.notes ?? '';
+
+    selectedPatientId = a.patientId;
+    selectedPatientName = a.patientName;
+    selectedDate = a.date;
+    selectedTime = a.time;
+    customReminder = a.customReminder;
+    customReminderTextController.text = a.customReminderText ?? '';
+
     _patientsDatasource.getPatients().listen((patients) {
-      setState(() {
-        _patients = patients;
-      });
+      if (!mounted) return;
+      setState(() => _patients = patients);
     });
   }
 
-  Future<void> _selectPatient() async {
-    if (_patients.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No hay pacientes creados')),
-      );
-      return;
-    }
-
-    Patient? selectedPatient;
-    if (selectedPatientId != null) {
-      selectedPatient = _patients.cast<Patient?>().firstWhere(
-            (p) => p?.id == selectedPatientId,
-            orElse: () => null,
-          );
-    }
-
-    final picked = await showDialog<Patient>(
+  void _selectPatient() {
+    showModalBottomSheet(
       context: context,
       builder: (context) {
-        Patient? localSelected = selectedPatient;
-        return AlertDialog(
-          title: const Text('Seleccionar paciente'),
-          content: StatefulBuilder(
-            builder: (context, setState) => SizedBox(
-              width: double.maxFinite,
-              child: ListView(
-                shrinkWrap: true,
-                children: _patients
-                    .map(
-                      (p) => RadioListTile<String>(
-                        value: p.id,
-                        groupValue: localSelected?.id,
-                        title: Text(p.name),
-                        onChanged: (_) => setState(() => localSelected = p),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, localSelected),
-              child: const Text('Aceptar'),
-            ),
-          ],
+        if (_patients.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(24),
+            child: Center(child: Text('No hay pacientes creados')),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: _patients.length,
+          itemBuilder: (context, index) {
+            final patient = _patients[index];
+
+            return ListTile(
+              title: Text(patient.name),
+              onTap: () {
+                setState(() {
+                  selectedPatientId = patient.id;
+                  selectedPatientName = patient.name;
+                });
+                Navigator.pop(context);
+              },
+            );
+          },
         );
       },
     );
-
-    if (picked != null) {
-      setState(() {
-        selectedPatientId = picked.id;
-        selectedPatientName = picked.name;
-      });
-    }
   }
 
   Future<void> _selectDate() async {
@@ -113,9 +100,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     );
 
     if (pickedDate != null) {
-      setState(() {
-        selectedDate = pickedDate;
-      });
+      setState(() => selectedDate = pickedDate);
     }
   }
 
@@ -126,16 +111,14 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     );
 
     if (pickedTime != null) {
-      setState(() {
-        selectedTime = pickedTime;
-      });
+      setState(() => selectedTime = pickedTime);
     }
   }
 
   Future<void> _selectCustomReminder() async {
     final pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: customReminder ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
@@ -144,7 +127,9 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     if (!mounted) return;
     final pickedTime = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: customReminder != null
+          ? TimeOfDay.fromDateTime(customReminder!)
+          : TimeOfDay.now(),
     );
     if (pickedTime == null) return;
 
@@ -165,25 +150,24 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nueva cita'),
+        title: const Text('Editar cita'),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () {
-            context.pop(); // Cancelar
-          },
+          onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () async {
               if (selectedPatientId == null ||
+                  selectedPatientName == null ||
                   selectedDate == null ||
                   selectedTime == null) {
                 return;
               }
 
-              final appointment = Appointment(
-                id: '',
+              final updated = Appointment(
+                id: widget.appointment.id, // ✅ IMPORTANTE: conservar id
                 title: titleController.text,
                 description: descriptionController.text,
                 patientId: selectedPatientId!,
@@ -205,9 +189,17 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     : null,
               );
 
-              await appointmentsDatasource.createAppointment(appointment);
+              final router = GoRouter.of(context);
 
-              context.pop();
+              await appointmentsDatasource.updateAppointment(
+                updated.id,
+                updated.toMap(),
+              );
+
+              await NotificationService().scheduleAppointmentNotification(updated);
+
+              if (!mounted) return;
+              router.pop(updated);
             },
           ),
         ],
@@ -219,7 +211,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           children: [
             _input('Nombre de la cita', controller: titleController),
             _input('Descripción', controller: descriptionController),
-
             const SizedBox(height: 12),
 
             _selector(
@@ -235,15 +226,14 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               buttonText: selectedDate == null
                   ? 'Seleccionar'
                   : '${selectedDate!.day} / ${selectedDate!.month} / ${selectedDate!.year}',
-              onTap: () => _selectDate(),
+              onTap: _selectDate,
             ),
 
             _selector(
               label: 'Hora',
-              buttonText: selectedTime == null
-                  ? 'seleccionar'
-                  : selectedTime!.format(context),
-              onTap: () => _selectTime(),
+              buttonText:
+                  selectedTime == null ? 'Seleccionar' : selectedTime!.format(context),
+              onTap: _selectTime,
             ),
 
             _selector(
@@ -258,10 +248,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               _input('Motivo del recordatorio (Ej. Autorización)', controller: customReminderTextController),
 
             _input('Nombre doctor (opcional)', controller: doctorController),
-            _input(
-              'Lugar de la cita (opcional)',
-              controller: locationController,
-            ),
+            _input('Lugar de la cita (opcional)', controller: locationController),
 
             _selector(
               label: 'Adjuntos',

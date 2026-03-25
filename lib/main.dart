@@ -7,10 +7,15 @@ import 'package:vitacareof/config/theme/app_theme.dart';
 import 'package:vitacareof/data/datasources/firebase_auth_datasource.dart';
 import 'package:vitacareof/firebase_options.dart';
 import 'package:vitacareof/presentation/providers/auth_provider.dart';
+import 'package:vitacareof/presentation/providers/theme_provider.dart';
+
+import 'package:vitacareof/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  await NotificationService().init();
 
   runApp(
     MultiProvider(
@@ -18,6 +23,9 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) =>
               AuthNotifier(FirebaseAuthDatasource(FirebaseAuth.instance)),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ThemeProvider(),
         ),
       ],
       child: const MyApp(),
@@ -30,9 +38,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme(selectedColor: 0).getTheme(),
+      theme: AppTheme(
+        selectedColor: themeProvider.selectedColor,
+        isDarkmode: themeProvider.isDarkmode,
+      ).getTheme(),
       routerConfig: appRouter,
     );
   }

@@ -10,11 +10,9 @@ import 'package:vitacareof/presentation/screens/home/home_screen.dart';
 import 'package:vitacareof/presentation/screens/login/login_screen.dart';
 import 'package:vitacareof/presentation/screens/medicines/medicine_detail.dart';
 import 'package:vitacareof/presentation/screens/profile/profile_screen.dart';
-import 'package:vitacareof/presentation/screens/pruebadatos/add_name_screen.dart';
-import 'package:vitacareof/presentation/screens/pruebadatos/edit_name_screen.dart';
-import 'package:vitacareof/presentation/screens/pruebadatos/prueba_datos_screen.dart';
 import 'package:vitacareof/presentation/screens/register/register_screen.dart';
 import 'package:vitacareof/presentation/screens/theme/theme_screen.dart';
+import 'package:vitacareof/presentation/screens/appointments/edit_appointment_page.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',
@@ -55,25 +53,6 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const ThemeScreen(),
     ),
 
-    //    PRUEBA DATOS
-    GoRoute(
-      path: '/datos',
-      name: 'datos',
-      builder: (context, state) => const PruebaDatos(),
-    ),
-    GoRoute(
-      path: '/add',
-      name: 'add',
-      builder: (context, state) => const AddNameScreen(),
-    ),
-    GoRoute(
-      path: '/edit',
-      builder: (context, state) {
-        final data = state.extra as Map<String, dynamic>?;
-        return EditNameScreen(data: data);
-      },
-    ),
-
     GoRoute(
       path: '/appointment_detail',
       name: AppointmentDetailPage.name,
@@ -89,6 +68,14 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final medicine = state.extra as Medicine;
         return MedicineDetail(medicine: medicine);
+      },
+    ),
+
+    GoRoute(
+      path: '/edit_appointment',
+      builder: (context, state) {
+        final appointment = state.extra as Appointment;
+        return EditAppointmentPage(appointment: appointment);
       },
     ),
   ],

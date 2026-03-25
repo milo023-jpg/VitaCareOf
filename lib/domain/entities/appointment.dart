@@ -15,6 +15,8 @@ class Appointment {
   final String? location;
   final String? notes;
   final List<String>? attachments;
+  final DateTime? customReminder;
+  final String? customReminderText;
 
   Appointment({
     required this.id,
@@ -28,6 +30,8 @@ class Appointment {
     this.location,
     this.notes,
     this.attachments,
+    this.customReminder,
+    this.customReminderText,
   });
 
   Map<String, dynamic> toMap() {
@@ -47,6 +51,8 @@ class Appointment {
       if (location != null) 'location': location,
       if (notes != null) 'notes': notes,
       if (attachments != null) 'attachments': attachments,
+      if (customReminder != null) 'customReminder': Timestamp.fromDate(customReminder!),
+      if (customReminderText != null) 'customReminderText': customReminderText,
     };
   }
 
@@ -71,6 +77,10 @@ class Appointment {
       attachments: data['attachments'] != null
           ? List<String>.from(data['attachments'])
           : null,
+      customReminder: data['customReminder'] != null
+          ? (data['customReminder'] as Timestamp).toDate()
+          : null,
+      customReminderText: data['customReminderText'],
     );
   }
 }

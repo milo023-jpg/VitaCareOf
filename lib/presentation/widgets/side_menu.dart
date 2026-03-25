@@ -70,20 +70,10 @@ class SideMenu extends StatelessWidget {
           selectedIcon: const Icon(Icons.palette),
         ),
         NavigationDrawerDestination(
-          icon: const Icon(Icons.data_usage),
-          label: const Text('Prueba Datos'),
-          selectedIcon: const Icon(Icons.data_usage),
-        ),
-        NavigationDrawerDestination(
           icon: const Icon(Icons.logout_outlined),
           label: const Text('Cerrar sesión'),
           selectedIcon: const Icon(Icons.logout),
         ),
-        /* NavigationDrawerDestination(
-          icon: const Icon(Icons.settings_outlined),
-          label: const Text('Configuración'),
-          selectedIcon: const Icon(Icons.settings),
-        ), */
       ],
 
       // ---------- MANEJO DE NAVEGACIÓN ----------
@@ -99,15 +89,9 @@ class SideMenu extends StatelessWidget {
             context.go('/theme');
             break;
           case 3:
-            context.go('/datos');
-            break;
-          case 4:
             authProvider.logout();
             context.go('/login');
             break;
-          /* case 3:
-            context.go('/configuracion');
-            break; */
         }
       },
     );

@@ -14,6 +14,7 @@ class AppointmentsPage extends StatefulWidget {
 class _AppointmentsPageState extends State<AppointmentsPage> {
   final _datasource = AppointmentsDatasource();
 
+  bool _previousExpanded = true;
   bool _todayExpanded = true;
   bool _weekExpanded = true;
   bool _monthExpanded = true;
@@ -22,7 +23,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFF4F6F8),
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: StreamBuilder<List<Appointment>>(
         stream: _datasource.getAppointments(),
         builder: (context, snapshot) {
@@ -48,6 +49,14 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
             children: [
+              if (groups.previous.isNotEmpty)
+                _DateSection(
+                  title: 'Citas anteriores',
+                  expanded: _previousExpanded,
+                  onToggle: () =>
+                      setState(() => _previousExpanded = !_previousExpanded),
+                  children: groups.previous,
+                ),
               if (groups.today.isNotEmpty)
                 _DateSection(
                   title: 'Hoy',
@@ -105,6 +114,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     final sorted = [...list]
       ..sort((a, b) => _asDateTime(a).compareTo(_asDateTime(b)));
 
+    final previous = <Appointment>[];
     final today = <Appointment>[];
     final week = <Appointment>[];
     final month = <Appointment>[];
@@ -113,24 +123,22 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     for (final a in sorted) {
       final dt = _asDateTime(a);
 
-      if (dt.isAfter(todayStart) && dt.isBefore(tomorrowStart)) {
+      if (dt.isBefore(todayStart)) {
+        previous.add(a);
+      } else if (!dt.isBefore(todayStart) && dt.isBefore(tomorrowStart)) {
         today.add(a);
-      } else if (dt.isAfter(weekStart) && dt.isBefore(nextWeekStart)) {
+      } else if (!dt.isBefore(weekStart) && dt.isBefore(nextWeekStart)) {
         week.add(a);
-      } else if (dt.isAfter(monthStart) && dt.isBefore(nextMonthStart)) {
+      } else if (!dt.isBefore(monthStart) && dt.isBefore(nextMonthStart)) {
         month.add(a);
       } else if (dt.isAfter(nextMonthStart) ||
           dt.isAtSameMomentAs(nextMonthStart)) {
         future.add(a);
-      } else {
-        // borde: citas pasadas del mes actual (si te interesa, luego hacemos sección "Pasadas")
-        if (dt.year == now.year && dt.month == now.month) {
-          month.add(a);
-        }
       }
     }
 
     return _AppointmentGroups(
+      previous: previous,
       today: today,
       week: week,
       month: month,
@@ -150,12 +158,14 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
 }
 
 class _AppointmentGroups {
+  final List<Appointment> previous;
   final List<Appointment> today;
   final List<Appointment> week;
   final List<Appointment> month;
   final List<Appointment> future;
 
   _AppointmentGroups({
+    required this.previous,
     required this.today,
     required this.week,
     required this.month,
@@ -190,10 +200,10 @@ class _DateSection extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black54,
+                    color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -202,7 +212,7 @@ class _DateSection extends StatelessWidget {
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
                   size: 18,
-                  color: Colors.black54,
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
                 ),
               ],
             ),
@@ -210,7 +220,15 @@ class _DateSection extends StatelessWidget {
         ),
         if (expanded) ...[
           const SizedBox(height: 6),
-          ...children.map((a) => _AppointmentTile(a)),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: children.length,
+            itemBuilder: (context, index) {
+              final appointment = children[index];
+              return _AppointmentTile(appointment: appointment);
+            },
+          ),
           const SizedBox(height: 16),
         ],
       ],
@@ -220,100 +238,217 @@ class _DateSection extends StatelessWidget {
 
 class _AppointmentTile extends StatefulWidget {
   final Appointment appointment;
-  const _AppointmentTile(this.appointment);
+  const _AppointmentTile({required this.appointment});
 
   @override
   State<_AppointmentTile> createState() => _AppointmentTileState();
 }
 
 class _AppointmentTileState extends State<_AppointmentTile> {
+  final _datasource = AppointmentsDatasource();
   bool isDone = false;
+
+  static const _monthsEs = [
+    'ene',
+    'feb',
+    'mar',
+    'abr',
+    'may',
+    'jun',
+    'jul',
+    'ago',
+    'sep',
+    'oct',
+    'nov',
+    'dic',
+  ];
+
+  String _formatDateEs(DateTime date) {
+    final month = _monthsEs[date.month - 1];
+    return '$month ${date.day}';
+  }
+
+  String _formatDateTimeMillisEs(DateTime date) {
+    final month = _monthsEs[date.month - 1];
+    final min = date.minute.toString().padLeft(2, '0');
+    final hr12 = date.hour > 12 ? date.hour - 12 : (date.hour == 0 ? 12 : date.hour);
+    final ampm = date.hour >= 12 ? 'PM' : 'AM';
+    return '${date.day} de $month, $hr12:$min $ampm';
+  }
+
+  Future<bool> _confirmAndDelete() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('¿Eliminar esta cita?'),
+          content: const Text('Esta acción eliminará la cita seleccionada.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldDelete != true) return false;
+
+    final appointment = widget.appointment;
+
+    try {
+      await _datasource.deleteAppointment(appointment.id);
+
+      if (!mounted) return true;
+
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(
+        SnackBar(
+          content: const Text('Cita eliminada'),
+          action: SnackBarAction(
+            label: 'Deshacer',
+            onPressed: () async {
+              try {
+                await _datasource.restoreAppointment(appointment);
+              } catch (_) {
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Error al restaurar la cita'),
+                  ),
+                );
+              }
+            },
+          ),
+        ),
+      );
+
+      return true;
+    } catch (_) {
+      if (!mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo eliminar la cita')),
+      );
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        context.push('/appointment_detail', extra: widget.appointment);
-      },
-      splashColor: Colors.blue,
-      highlightColor: Colors.blue,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Boton de punto
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  isDone = !isDone;
-                });
-              },
-              icon: Icon(
-                isDone ? Icons.check_circle : Icons.radio_button_unchecked,
-              ),
-            ),
-            const SizedBox(width: 10),
+    final dateText = _formatDateEs(widget.appointment.date);
+    final subtitleText =
+        '$dateText • ${widget.appointment.time.format(context)} • ${widget.appointment.patientName}';
 
-            // iformacion de la cita
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.appointment.title.trim().isEmpty
-                        ? 'Sin título'
-                        : widget.appointment.title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+    return Dismissible(
+      key: ValueKey(widget.appointment.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (_) => _confirmAndDelete(),
+      background: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        alignment: Alignment.centerRight,
+        decoration: BoxDecoration(
+          color: Colors.red.shade600,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      child: InkWell(
+        onTap: () {
+          context.push('/appointment_detail', extra: widget.appointment);
+        },
+        splashColor: Colors.blue,
+        highlightColor: Colors.blue,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Boton de punto
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    isDone = !isDone;
+                  });
+                },
+                icon: Icon(
+                  isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+                ),
+              ),
+              const SizedBox(width: 10),
+
+              // iformacion de la cita
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.appointment.title.trim().isEmpty
+                          ? 'Sin título'
+                          : widget.appointment.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        widget.appointment.time.format(context),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '•',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          widget.appointment.patientName,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade600,
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            subtitleText,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                    if (widget.appointment.customReminder != null) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.notifications_active, size: 12, color: Theme.of(context).primaryColor),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              widget.appointment.customReminderText != null
+                                  ? '${widget.appointment.customReminderText} • ${_formatDateTimeMillisEs(widget.appointment.customReminder!)}'
+                                  : 'Recordatorio: ${_formatDateTimeMillisEs(widget.appointment.customReminder!)}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -11,6 +11,11 @@ import 'package:vitacareof/presentation/widgets/horizontal_filters.dart';
 import 'package:vitacareof/presentation/widgets/side_menu.dart';
 import 'package:vitacareof/presentation/screens/medicines/new_medicine_page.dart';
 
+/// Pantalla principal que sirve como contenedor maestro (Scaffold root) de la navegación interna.
+/// 
+/// Corresponde a la capa de Presentación. Utiliza un patrón de "Index Stack" (vía switch)
+/// para renderizar sub-pantallas y mantener la navegación inferior. Adicionalmente,
+/// gestiona el estado global compartido de "Filtro de Paciente".
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -19,39 +24,57 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  /// Dependencia a la capa de datos. Idealmente inyectada vía Provider o GetIt
+  /// pero instanciada directamente por ahora.
   final _patientsDatasource = PatientsDatasource();
 
+  /// Estado interno: lista completa de pacientes obtenidos en tiempo real.
   List<Patient> _patients = [];
+  
+  /// Estado interno: UID del paciente seleccionado en el filtro. 
+  /// Si es nulo, significa que no hay filtro aplicado (muestran todos).
   String? filtroSeleccionado;
+  
+  /// Estado interno: Índice activo del `BottomNavigationBar`.
   int _paginaActual = 0;
 
   @override
   void initState() {
     super.initState();
-
+    // Suscripción al stream de pacientes para mantener la lista actualizada
+    // en tiempo real. Esta lista es crítica para el filtro horizontal.
     _patientsDatasource.getPatients().listen((patients) {
-      setState(() {
-        _patients = patients;
-      });
+      if (mounted) {
+        setState(() {
+          _patients = patients;
+        });
+      }
     });
   }
 
-  // 🔹 Selección dinámica de página (IMPORTANTE)
+  /// Devuelve dinámicamente el widget (página) correspondiente a la pestaña activa.
+  /// 
+  /// Inyecta el [filtroSeleccionado] en las sub-páginas para que estas
+  /// modifiquen sus consultas en cascada.
   Widget _paginaActualWidget() {
     switch (_paginaActual) {
       case 0:
         return AppointmentsPage(patientId: filtroSeleccionado);
       case 1:
-        return const CalendarPage();
+        return CalendarPage(patientId: filtroSeleccionado);
       case 2:
         return MedicinePage(patientId: filtroSeleccionado);
       case 3:
+        // Cargar consejos no depende de un paciente específico en la app
         return const AdvicePage();
       default:
         return const SizedBox();
     }
   }
 
+  /// Lanza un diálogo nativo pidiendo el nombre de un paciente nuevo.
+  /// 
+  /// Interactúa con el Datasource para aplicar el cambio en base de datos.
   void _mostrarDialogoNuevoPaciente() {
     showDialog(
       context: context,
@@ -92,6 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(title: const Text('VitaCare')),
       body: Column(
         children: [
+          // Renderiza el selector de pacientes únicamente si la pestaña
+          // actual lo soporta (Citas, Calendario o Medicinas).
           if (_paginaActual == 0 || _paginaActual == 1 || _paginaActual == 2)
             HorizontalFilters(
               patients: _patients,
@@ -103,6 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               onAddPatient: _mostrarDialogoNuevoPaciente,
             ),
+          
+          // Renderizado dinámico de la página que ocupa el resto del espacio
           Expanded(child: _paginaActualWidget()),
         ],
       ),
@@ -130,6 +157,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      // SpeedDial para permitir acceso rápido a la creación de recursos
+      // primarios (Citas o Medicinas), evitando navegación profunda.
       floatingActionButton: SpeedDial(
         icon: Icons.add,
         activeIcon: Icons.close,

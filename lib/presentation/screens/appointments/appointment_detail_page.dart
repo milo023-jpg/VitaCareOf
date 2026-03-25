@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vitacareof/domain/entities/appointment.dart';
+import 'package:go_router/go_router.dart';
 
-class AppointmentDetailPage extends StatelessWidget {
+class AppointmentDetailPage extends StatefulWidget {
   static const name = 'appointment_detail';
 
   final Appointment appointment;
@@ -10,11 +11,45 @@ class AppointmentDetailPage extends StatelessWidget {
   const AppointmentDetailPage({super.key, required this.appointment});
 
   @override
+  State<AppointmentDetailPage> createState() => _AppointmentDetailPageState();
+}
+
+class _AppointmentDetailPageState extends State<AppointmentDetailPage> {
+  late Appointment _appointment;
+
+  @override
+  void initState() {
+    super.initState();
+    _appointment = widget.appointment;
+  }
+
+  Future<void> _goToEdit() async {
+    final updated = await context.push<Appointment>(
+      '/edit_appointment',
+      extra: _appointment,
+    );
+
+    if (!mounted || updated == null) return;
+
+    setState(() {
+      _appointment = updated;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd MMMM yyyy');
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalle de la cita')),
+      appBar: AppBar(
+        title: const Text('Detalle de la cita'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: _goToEdit,
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -22,7 +57,7 @@ class AppointmentDetailPage extends StatelessWidget {
           children: [
             // TÍTULO
             Text(
-              appointment.title.isEmpty ? 'Sin título' : appointment.title,
+              _appointment.title.isEmpty ? 'Sin título' : _appointment.title,
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -35,11 +70,11 @@ class AppointmentDetailPage extends StatelessWidget {
               children: [
                 const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                 const SizedBox(width: 6),
-                Text(dateFormat.format(appointment.date)),
+                Text(dateFormat.format(_appointment.date)),
                 const SizedBox(width: 16),
                 const Icon(Icons.schedule, size: 16, color: Colors.grey),
                 const SizedBox(width: 6),
-                Text(appointment.time.format(context)),
+                Text(_appointment.time.format(context)),
               ],
             ),
 
@@ -48,7 +83,7 @@ class AppointmentDetailPage extends StatelessWidget {
             _InfoCard(
               icon: Icons.person,
               title: 'Paciente',
-              content: appointment.patientName,
+              content: _appointment.patientName,
             ),
 
             const SizedBox(height: 12),
@@ -56,35 +91,46 @@ class AppointmentDetailPage extends StatelessWidget {
             _InfoCard(
               icon: Icons.description,
               title: 'Descripción',
-              content: appointment.description.isEmpty
+              content: _appointment.description.isEmpty
                   ? 'Sin descripción'
-                  : appointment.description,
+                  : _appointment.description,
             ),
 
-            if (appointment.doctor != null) ...[
+            if (_appointment.doctor != null) ...[
               const SizedBox(height: 12),
               _InfoCard(
                 icon: Icons.medical_services,
                 title: 'Doctor',
-                content: appointment.doctor!,
+                content: _appointment.doctor!,
               ),
             ],
 
-            if (appointment.location != null) ...[
+            if (_appointment.customReminder != null) ...[
+              const SizedBox(height: 12),
+              _InfoCard(
+                icon: Icons.notifications_active,
+                title: _appointment.customReminderText != null 
+                    ? 'Recordatorio: ${_appointment.customReminderText}' 
+                    : 'Recordatorio Previo',
+                content: DateFormat('dd MMMM yyyy • hh:mm a').format(_appointment.customReminder!),
+              ),
+            ],
+
+            if (_appointment.location != null) ...[
               const SizedBox(height: 12),
               _InfoCard(
                 icon: Icons.location_on,
                 title: 'Lugar',
-                content: appointment.location!,
+                content: _appointment.location!,
               ),
             ],
 
-            if (appointment.notes != null) ...[
+            if (_appointment.notes != null) ...[
               const SizedBox(height: 12),
               _InfoCard(
                 icon: Icons.notes,
                 title: 'Observaciones',
-                content: appointment.notes!,
+                content: _appointment.notes!,
               ),
             ],
           ],

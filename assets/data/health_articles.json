@@ -35,7 +35,7 @@
     "subtitle": "Por qué tomar suficiente agua mejora tu salud y energía.",
     "category": "Alimentacion",
     "tags": ["agua", "hidratacion", "energia"],
-    "image": "assets/images/tips/alim_02.png",
+    "image": "assets/images/tips/alim_02.jpg",
     "readMinutes": 3,
     "markdown": "## El agua y tu cuerpo\nEl agua participa en casi todos los procesos del cuerpo: digestión, circulación y regulación de temperatura.\n\n## Señales de deshidratación\n- Fatiga\n- Dolor de cabeza\n- Boca seca\n\n## Tips prácticos\n- Lleva una botella contigo.\n- Toma un vaso de agua al despertar.\n- Acompaña cada comida con agua.\n\n## Recordatorio\nNo esperes a tener sed para hidratarte.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -55,7 +55,7 @@
     "subtitle": "Cómo moverte más sin ir al gimnasio.",
     "category": "Ejercicio",
     "tags": ["actividad", "movimiento", "salud"],
-    "image": "assets/images/tips/ejer_02.png",
+    "image": "assets/images/tips/ejer_02.jpeg",
     "readMinutes": 3,
     "markdown": "## Moverse cuenta\nNo todo ejercicio debe ser intenso o largo. El movimiento diario suma.\n\n## Ideas simples\n- Caminar mientras hablas por teléfono.\n- Usar escaleras.\n- Estirarte cada hora.\n\n## Objetivo diario\nAcumular al menos **30 minutos de movimiento**.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -65,7 +65,7 @@
     "subtitle": "Técnicas simples para reducir la tensión diaria.",
     "category": "Estres",
     "tags": ["estres", "ansiedad", "respiracion"],
-    "image": "assets/images/tips/estres_01.png",
+    "image": "assets/images/tips/estres_01.jpg",
     "readMinutes": 4,
     "markdown": "## El estrés acumulado afecta la salud\nPuede provocar cansancio, irritabilidad y problemas de sueño.\n\n## Técnicas rápidas\n1. Respiración profunda 4-4-6.\n2. Pausas conscientes.\n3. Reducir multitarea.\n\n## Qué evitar\n- Ignorar señales del cuerpo.\n- Sobrecargarte sin descanso.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -75,7 +75,7 @@
     "subtitle": "Pausar también es productividad.",
     "category": "Estres",
     "tags": ["pausas", "descanso", "productividad"],
-    "image": "assets/images/tips/estres_02.png",
+    "image": "assets/images/tips/estres_02.jpg",
     "readMinutes": 3,
     "markdown": "## Descansar mejora el rendimiento\nPausas cortas reducen el agotamiento mental.\n\n## Cómo hacerlo\n- 5 minutos cada hora.\n- Levántate y estírate.\n- Respira profundo.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -85,7 +85,7 @@
     "subtitle": "Estrategias prácticas para cumplir tu tratamiento.",
     "category": "Medicacion",
     "tags": ["medicamentos", "recordatorios", "rutina"],
-    "image": "assets/images/tips/med_01.png",
+    "image": "assets/images/tips/medi_01.jpg",
     "readMinutes": 3,
     "markdown": "## La constancia es clave\nTomar los medicamentos correctamente ayuda a que el tratamiento funcione.\n\n## Tips útiles\n- Asócialos a una rutina diaria.\n- Usa alarmas.\n- Organiza pastilleros.\n\n## Evita\n- Suspender sin indicación médica.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -95,7 +95,7 @@
     "subtitle": "Pequeños descuidos que pueden afectar tu salud.",
     "category": "Medicacion",
     "tags": ["errores", "tratamiento", "salud"],
-    "image": "assets/images/tips/med_02.png",
+    "image": "assets/images/tips/medi_02.png",
     "readMinutes": 4,
     "markdown": "## Errores frecuentes\n- Cambiar horarios.\n- Mezclar con alcohol.\n- No leer indicaciones.\n\n## Recomendación\nAnte dudas, consulta siempre con un profesional.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -105,7 +105,7 @@
     "subtitle": "Detectar a tiempo también es cuidarse.",
     "category": "Prevencion",
     "tags": ["chequeos", "prevencion", "salud"],
-    "image": "assets/images/tips/prev_01.png",
+    "image": "assets/images/tips/prev_01.jpg",
     "readMinutes": 4,
     "markdown": "## Prevención activa\nLos chequeos ayudan a detectar problemas antes de que aparezcan síntomas.\n\n## Qué hacer\n- Agenda controles anuales.\n- Lleva historial médico.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -115,7 +115,7 @@
     "subtitle": "Cuida tu espalda con pequeños ajustes.",
     "category": "Prevencion",
     "tags": ["postura", "espalda", "ergonomia"],
-    "image": "assets/images/tips/prev_02.png",
+    "image": "assets/images/tips/prev_02.jpg",
     "readMinutes": 3,
     "markdown": "## Una mala postura pasa factura\nPuede causar dolores crónicos.\n\n## Tips rápidos\n- Ajusta altura de pantalla.\n- Apoya ambos pies.\n- Cambia de posición frecuentemente.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -125,7 +125,7 @@
     "subtitle": "El orden también mejora la salud mental.",
     "category": "Prevencion",
     "tags": ["rutina", "organizacion", "habitos"],
-    "image": "assets/images/tips/prev_03.png",
+    "image": "assets/images/tips/prev_03.webp",
     "readMinutes": 3,
     "markdown": "## Rutinas saludables\nAportan estabilidad, reducen estrés y mejoran adherencia a hábitos.\n\n## Empieza por\n- Horarios de sueño.\n- Comidas regulares.\n\n> *Contenido educativo. No sustituye atención médica.*"
   },
@@ -135,7 +135,7 @@
     "subtitle": "Un hábito simple con grandes beneficios.",
     "category": "Prevencion",
     "tags": ["caminar", "cardio", "salud"],
-    "image": "assets/images/tips/prev_04.png",
+    "image": "assets/images/tips/prev_04.webp",
     "readMinutes": 3,
     "markdown": "## Caminar es ejercicio\nMejora circulación, ánimo y salud cardiovascular.\n\n## Objetivo\n- 20–30 minutos diarios.\n\n> *Contenido educativo. No sustituye atención médica.*"
   }
