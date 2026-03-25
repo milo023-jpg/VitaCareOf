@@ -172,8 +172,6 @@ class NotificationService {
       
       // NOTA: Para un MVP la forma más fácil es programar una notificación y repetirla cada 12 o 24 horas, o depender de un plugin que hace true intervals.
       // Como flutter_local_notifications soporta repetlly pero solo every minute, hour, daily o weekly
-      RepeatInterval interval = RepeatInterval.daily; 
-      if (medicine.intervalHours == 1) interval = RepeatInterval.hourly;
       // Para otros intervalos, la librería nativa tiene limitaciones. 
       // Por salir rápido para el proyecto de grado, podemos programar 1 sola vez en el futuro cercano,
       // La mejor solución de grado rápido es simplemente programar la próxima toma exacta.
