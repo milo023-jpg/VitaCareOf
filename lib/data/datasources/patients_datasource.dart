@@ -31,7 +31,7 @@ class PatientsDatasource {
           .map(
             (doc) =>
                 // Es vital pasar el doc.id para la correcta manipulación de la entidad
-                Patient.fromMap(doc.id, doc.data() as Map<String, dynamic>),
+                Patient.fromMap(doc.id, doc.data()),
           )
           .toList();
     });

@@ -264,7 +264,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+            color: Theme.of(context).primaryColor.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: Theme.of(context).primaryColor, size: 22),
