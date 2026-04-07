@@ -73,14 +73,17 @@ class MedicinesDatasource {
 
   /// Cambia rápidamente el estado activo/inactivo de un medicamento.
   ///
-  /// [id] es el identificador del medicamento en Firestore y [value] el nuevo estado booleano.
-  Future<void> toggleMedicine(String id, bool value) async {
+  /// [medicine] es el medicamento y [value] el nuevo estado booleano.
+  Future<void> toggleMedicine(Medicine medicine, bool value) async {
     await _firestore
         .collection('users')
         .doc(_uid)
         .collection('medicines')
-        .doc(id)
+        .doc(medicine.id)
         .update({'isActive': value});
+        
+    final updatedMedicine = medicine.copyWith(isActive: value);
+    await NotificationService().scheduleMedicineNotification(updatedMedicine);
   }
 
   /// Actualiza campos específicos de un medicamento existente.
@@ -108,7 +111,7 @@ Future<void> deleteMedicine(String id) async {
       
   // Al eliminar de la base de datos es vital limpiar las notificaciones locales
   // para evitar enviar alertas "fantasma" de medicamentos que ya no existen.
-  await NotificationService().cancelNotification(id.hashCode);
+  await NotificationService().cancelMedicineNotifications(id);
 }
 
 }

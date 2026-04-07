@@ -42,7 +42,35 @@ class NotificationService {
         ?.requestExactAlarmsPermission();
   }
 
+  int _getAppointmentBaseId(String id) {
+    return 200000000 + (id.hashCode.abs() % 1000000) * 100;
+  }
+
+  int _getMedicineBaseId(String id) {
+    return 100000000 + (id.hashCode.abs() % 1000000) * 100;
+  }
+
+  Future<void> cancelAppointmentNotifications(String id) async {
+    final baseId = _getAppointmentBaseId(id);
+    for (int i = 0; i < 10; i++) {
+      await flutterLocalNotificationsPlugin.cancel(baseId + i);
+    }
+  }
+
+  Future<void> cancelMedicineNotifications(String id) async {
+    final baseId = _getMedicineBaseId(id);
+    for (int i = 0; i < 64; i++) {
+      await flutterLocalNotificationsPlugin.cancel(baseId + i);
+    }
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
   Future<void> scheduleAppointmentNotification(Appointment appointment) async {
+    await cancelAppointmentNotifications(appointment.id);
+
     final appointmentDateTime = DateTime(
       appointment.date.year,
       appointment.date.month,
@@ -52,52 +80,51 @@ class NotificationService {
     );
 
     if (appointmentDateTime.isBefore(DateTime.now())) {
-      return; // No programar en el pasado
+      return; 
     }
 
-    // Programar 1 hora antes
-    final notificationTime = appointmentDateTime.subtract(const Duration(hours: 1));
-    bool isOneHourBefore = true;
-    
-    DateTime finalTime = notificationTime;
-    if (notificationTime.isBefore(DateTime.now())) {
-      // Si falta menos de 1 hora, notificar a la hora exacta
-      if (appointmentDateTime.isAfter(DateTime.now())) {
-        finalTime = appointmentDateTime;
-        isOneHourBefore = false;
-      } else {
-        return;
+    final baseId = _getAppointmentBaseId(appointment.id);
+    int offset = 0;
+
+    Future<void> schedule(DateTime time, String body) async {
+      if (time.isAfter(DateTime.now())) {
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          baseId + offset,
+          'Cita Médica: ${appointment.title}',
+          body,
+          tz.TZDateTime.from(time, tz.local),
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'vitacare_appointments',
+              'Citas Médicas',
+              channelDescription: 'Recordatorios de citas',
+              importance: Importance.max,
+              priority: Priority.high,
+            ),
+          ),
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+        );
+        offset++;
       }
     }
 
-    final id = appointment.id.hashCode;
+    // 1 mes antes
+    await schedule(appointmentDateTime.subtract(const Duration(days: 30)), 'Tu cita para ${appointment.patientName} es en 1 mes.');
+    // 1 semana antes
+    await schedule(appointmentDateTime.subtract(const Duration(days: 7)), 'Tu cita para ${appointment.patientName} es en 1 semana.');
+    // 1 día antes
+    await schedule(appointmentDateTime.subtract(const Duration(days: 1)), 'Tu cita para ${appointment.patientName} es mañana.');
+    // 1 hora antes
+    await schedule(appointmentDateTime.subtract(const Duration(hours: 1)), 'Tu cita para ${appointment.patientName} es en 1 hora.');
+    // Hora exacta
+    await schedule(appointmentDateTime, 'Es hora de tu cita para ${appointment.patientName}.');
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      'Cita Médica: ${appointment.title}',
-      isOneHourBefore 
-        ? 'Tu cita para ${appointment.patientName} es en 1 hora.'
-        : 'Es hora de tu cita para ${appointment.patientName}.',
-      tz.TZDateTime.from(finalTime, tz.local),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'vitacare_appointments',
-          'Citas Médicas',
-          channelDescription: 'Recordatorios de citas',
-          importance: Importance.max,
-          priority: Priority.high,
-        ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
-    
-    // NOTIFICACIÓN CUSTOM (Exámenes, autorizaciones, etc)
-    final customId = appointment.id.hashCode ^ 12345;
+    // Custom reminder
     if (appointment.customReminder != null && appointment.customReminder!.isAfter(DateTime.now())) {
       await flutterLocalNotificationsPlugin.zonedSchedule(
-        customId,
+        baseId + offset,
         'Recordatorio previo: ${appointment.title}',
         appointment.customReminderText ?? 'Acción requerida para tu cita con ${appointment.patientName}',
         tz.TZDateTime.from(appointment.customReminder!, tz.local),
@@ -114,25 +141,20 @@ class NotificationService {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
       );
-    } else {
-      await flutterLocalNotificationsPlugin.cancel(customId);
+      offset++;
     }
-  }
-
-  Future<void> cancelNotification(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(id);
   }
 
   Future<void> scheduleMedicineNotification(Medicine medicine) async {
+    await cancelMedicineNotifications(medicine.id);
+
     if (!medicine.isActive) {
-      await cancelNotification(medicine.id.hashCode);
       return;
     }
 
-    final id = medicine.id.hashCode;
+    final baseId = _getMedicineBaseId(medicine.id);
 
     if (medicine.scheduleType == MedicineScheduleType.fixed && medicine.time != null) {
-      // Calcula el primer momento en que debería sonar a partir de hoy a esa hora
       final now = DateTime.now();
       var scheduledDate = DateTime(
         now.year,
@@ -147,7 +169,7 @@ class NotificationService {
       }
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
+        baseId,
         'Hora de tu medicamento',
         'Debes tomar ${medicine.name} (${medicine.patientName})',
         tz.TZDateTime.from(scheduledDate, tz.local),
@@ -163,20 +185,10 @@ class NotificationService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time, // Repite todos los días a la misma hora
+        matchDateTimeComponents: DateTimeComponents.time, 
       );
     } else if (medicine.scheduleType == MedicineScheduleType.interval && medicine.startTime != null && medicine.intervalHours != null) {
-      // Para intervalos es mucho más complejo. Repetimos usando un periodic si cae exacto o simplemente interval
-      // Por simplicidad en versión MVP de grado: Programar una alerta recursiva si es cada X horas usando matchDateTimeComponents o periodic
-      // Sin embargo zonedSchedule no acepta "cada X horas" arbitrarias. Así que programaremos periódicamente la primera y asumiremos un workaround MVP
       
-      // NOTA: Para un MVP la forma más fácil es programar una notificación y repetirla cada 12 o 24 horas, o depender de un plugin que hace true intervals.
-      // Como flutter_local_notifications soporta repetlly pero solo every minute, hour, daily o weekly
-      // Para otros intervalos, la librería nativa tiene limitaciones. 
-      // Por salir rápido para el proyecto de grado, podemos programar 1 sola vez en el futuro cercano,
-      // La mejor solución de grado rápido es simplemente programar la próxima toma exacta.
-      
-      // Programamos la primera vez que toque "de aquí en adelante"
       final now = DateTime.now();
       DateTime nextTime = DateTime(
         now.year,
@@ -190,26 +202,29 @@ class NotificationService {
         nextTime = nextTime.add(Duration(hours: medicine.intervalHours!));
       }
 
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
-        'Hora de tu medicamento',
-        'Debes tomar ${medicine.name} ahora (${medicine.patientName})',
-        tz.TZDateTime.from(nextTime, tz.local),
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'vitacare_interval',
-            'Medicamentos Intervalo',
-            channelDescription: 'Recordatorios de medicamentos por intervalo',
-            importance: Importance.max,
-            priority: Priority.high,
+      // Schedule up to 60 occurrences ahead (e.g. 20 days if every 8 hrs)
+      int occurrences = 60;
+      for (int i = 0; i < occurrences; i++) {
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          baseId + i,
+          'Hora de tu medicamento',
+          'Debes tomar ${medicine.name} (${medicine.patientName})',
+          tz.TZDateTime.from(nextTime, tz.local),
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'vitacare_interval',
+              'Medicamentos Intervalo',
+              channelDescription: 'Recordatorios de medicamentos por intervalo',
+              importance: Importance.max,
+              priority: Priority.high,
+            ),
           ),
-        ),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        // No configuramos matchDateTimeComponents para que no repita mal. 
-        // Idealmente cuando el usuario abra la app de nuevo re-calendarizamos, o usamos otro paquete, pero esto es un fix rápido.
-      );
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+        );
+        nextTime = nextTime.add(Duration(hours: medicine.intervalHours!));
+      }
     }
   }
 }

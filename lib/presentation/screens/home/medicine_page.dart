@@ -220,7 +220,7 @@ class _MedicineCard extends StatelessWidget {
             Switch(
               value: medicine.isActive,
               onChanged: (value) {
-                datasource.toggleMedicine(medicine.id, value);
+                datasource.toggleMedicine(medicine, value);
               },
             ),
           ],

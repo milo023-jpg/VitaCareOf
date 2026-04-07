@@ -94,8 +94,7 @@ class AppointmentsDatasource {
 
     // Cancela la notificación usando el hashcode generado originalmente a partir del ID.
     // También cancela notificaciones secundarias (por ejemplo, recordatorio custom vs normal).
-    await NotificationService().cancelNotification(appointmentId.hashCode);
-    await NotificationService().cancelNotification(appointmentId.hashCode ^ 12345);
+    await NotificationService().cancelAppointmentNotifications(appointmentId);
   }
 
   /// Restaura o sobreescribe una cita completa usando su ID original.

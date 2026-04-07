@@ -148,4 +148,44 @@ class Medicine {
           : DateTime.now(),
     );
   }
+
+  Medicine copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? type,
+    String? patientId,
+    String? patientName,
+    bool? isActive,
+    MedicineScheduleType? scheduleType,
+    TimeOfDay? time,
+    MedicineRepeatType? repeat,
+    List<int>? daysOfWeek,
+    int? intervalHours,
+    TimeOfDay? startTime,
+    MedicineDurationType? durationType,
+    int? durationDays,
+    DateTime? endDate,
+    DateTime? createdAt,
+  }) {
+    return Medicine(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      type: type ?? this.type,
+      patientId: patientId ?? this.patientId,
+      patientName: patientName ?? this.patientName,
+      isActive: isActive ?? this.isActive,
+      scheduleType: scheduleType ?? this.scheduleType,
+      time: time ?? this.time,
+      repeat: repeat ?? this.repeat,
+      daysOfWeek: daysOfWeek ?? this.daysOfWeek,
+      intervalHours: intervalHours ?? this.intervalHours,
+      startTime: startTime ?? this.startTime,
+      durationType: durationType ?? this.durationType,
+      durationDays: durationDays ?? this.durationDays,
+      endDate: endDate ?? this.endDate,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
